@@ -2,7 +2,6 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { StudentRoutes } from './app/modules/students/student.route';
 const app = express();
-const port = 3000;
 
 ///its a parser
 
