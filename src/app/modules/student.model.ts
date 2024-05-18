@@ -65,4 +65,4 @@ const studentSchema = new Schema<Student>({
 
 ///model creation 3rd step
 
-const student = model<Student>('User', studentSchema);
+export const StudentModel = model<Student>('Student', studentSchema, 'School');
