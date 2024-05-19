@@ -15,8 +15,10 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
-    console.log('cannot posted data!');
+    res.status(500).json({
+      success: true,
+      message: err,
+    });
   }
 };
 
