@@ -8,7 +8,7 @@ import {
 } from './students/student.interface';
 import bcrypt from 'bcrypt';
 import config from '../config';
-import { string } from 'joi';
+import { boolean, func, string } from 'joi';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -92,9 +92,13 @@ const studentSchema = new Schema<Student>({
   localGuardian: localGuardianSchema,
   profileImage: { type: String, required: true },
   isActive: ['active', 'blocked'],
+  isdeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// pre saved middleware
+// pre saved middleware (document middlewares)
 
 studentSchema.pre('save', async function (next) {
   const user = this;
@@ -109,6 +113,16 @@ studentSchema.pre('save', async function (next) {
 studentSchema.post('save', function (doc, next) {
   doc.password = '';
   console.log(this, 'post hook: we  saved our` data');
+  next();
+});
+
+//query middleware
+studentSchema.pre('find', function (next) {
+  this.find({ isdeleted: { $ne: true } });
+  next();
+});
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { $isdelete: { $ne: true } } });
   next();
 });
 

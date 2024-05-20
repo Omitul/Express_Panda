@@ -12,4 +12,6 @@ router.get('/:studentId', StudentControllers.getSingleStudent);
 
 router.get('/delete/:studentId', StudentControllers.deleteStudentFromDb);
 
+router.delete('/:studentId', StudentControllers.deleteStudentFromDbH);
+
 export const StudentRoutes = router;
