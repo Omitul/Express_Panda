@@ -8,10 +8,12 @@ import {
 } from './students/student.interface';
 import bcrypt from 'bcrypt';
 import config from '../config';
+import { string } from 'joi';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
     type: String,
+    trim: true,
     required: true,
   },
   middleName: {
@@ -45,7 +47,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
-  id: { type: String, unique: true },
+  id: { type: String, required: true, unique: true },
   password: {
     type: String,
     required: [true, 'password lagbei'],
@@ -54,7 +56,16 @@ const studentSchema = new Schema<Student>({
   },
   name: userNameSchema,
 
-  gender: ['male', 'female', 'other'],
+  gender: {
+    type: String,
+
+    enum: {
+      values: ['male', 'female', 'other'],
+      message:
+        "The gender should be one of the followings: 'male','female','other'.",
+    },
+    required: true,
+  },
   dateOfBirth: {
     type: String,
   },
