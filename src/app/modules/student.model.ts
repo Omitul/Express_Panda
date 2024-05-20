@@ -52,7 +52,6 @@ const studentSchema = new Schema<Student>({
     type: String,
     required: [true, 'password lagbei'],
     maxlength: 20,
-    unique: true,
   },
   name: userNameSchema,
 
@@ -107,8 +106,10 @@ studentSchema.pre('save', async function (next) {
   console.log(this, 'pre hook: we will save the data');
 });
 
-studentSchema.post('save', function () {
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
   console.log(this, 'post hook: we  saved our` data');
+  next();
 });
 
 ///model creation 3rd step
