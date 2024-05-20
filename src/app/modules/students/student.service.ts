@@ -1,8 +1,11 @@
 import { StudentModel } from '../student.model';
 import { Student } from './student.interface';
 
-const createStudentIntoDB = async (student: Student) => {
-  const result = await StudentModel.create(student);
+const createStudentIntoDB = async (studentData: Student) => {
+  //  const result = await StudentModel.create(student);
+
+  const student = new StudentModel(studentData);
+  const result = await student.save(); //mongoose provide kore ei func
   return result;
 };
 

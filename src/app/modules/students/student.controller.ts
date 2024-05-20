@@ -1,11 +1,32 @@
 import { Request, Response } from 'express';
 import { StudentServies } from './student.service';
-
+import studentValidationZodSchema from './student.validationZod';
+//import studentValidationSchemaJoi from './student.validationJoi';
 const createStudent = async (req: Request, res: Response) => {
   try {
+    ///schema validation using joi
+
+    /// using zod validation
+    // const studentValidationSchemaJod = z.object({
+    //   id: z.string(),
+    //   name: z.object({
+    //     firstName: z
+    //       .string()
+    //       .max(20, 'firstName cannot be more than 20 characters'),
+    //   }),
+    // });
+
     const { student: StudentData } = req.body;
+
+    const zodParsedData = studentValidationZodSchema.parse(StudentData);
+
+    //used joi
+    //const { error, value } = studentValidationSchemaJoi.validate(StudentData);
+    //console.log(error, value);
     // will call service func to send this data
-    const result = await StudentServies.createStudentIntoDB(StudentData);
+    //const result = await StudentServies.createStudentIntoDB(value);
+
+    const result = await StudentServies.createStudentIntoDB(zodParsedData);
 
     //send response
 
@@ -16,7 +37,7 @@ const createStudent = async (req: Request, res: Response) => {
     });
   } catch (err) {
     res.status(500).json({
-      success: true,
+      success: false,
       message: err,
     });
   }

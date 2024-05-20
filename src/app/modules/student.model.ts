@@ -6,6 +6,8 @@ import {
   Student,
   UserName,
 } from './students/student.interface';
+import bcrypt from 'bcrypt';
+import config from '../config';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -43,10 +45,16 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
-  id: { type: String },
+  id: { type: String, unique: true },
+  password: {
+    type: String,
+    required: [true, 'password lagbei'],
+    maxlength: 20,
+    unique: true,
+  },
   name: userNameSchema,
 
-  gender: ['male', 'female'],
+  gender: ['male', 'female', 'other'],
   dateOfBirth: {
     type: String,
   },
@@ -62,6 +70,10 @@ const studentSchema = new Schema<Student>({
     type: String,
     required: true,
   },
+  emergencyContactNo: {
+    type: String,
+    required: true,
+  },
 
   bloodGroupd: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
   presentAddress: { type: String, required: true },
@@ -70,6 +82,22 @@ const studentSchema = new Schema<Student>({
   localGuardian: localGuardianSchema,
   profileImage: { type: String, required: true },
   isActive: ['active', 'blocked'],
+});
+
+// pre saved middleware
+
+studentSchema.pre('save', async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+  console.log(this, 'pre hook: we will save the data');
+});
+
+studentSchema.post('save', function () {
+  console.log(this, 'post hook: we  saved our` data');
 });
 
 ///model creation 3rd step
