@@ -5,9 +5,9 @@ import {
   LocalGuardian,
   Student,
   UserName,
-} from './students/student.interface';
+} from './student.interface';
 import bcrypt from 'bcrypt';
-import config from '../config';
+import config from '../../config';
 import { boolean, func, string } from 'joi';
 
 const userNameSchema = new Schema<UserName>({
