@@ -7,8 +7,9 @@ export type Tuser = {
   isDeleted: boolean;
 };
 
-export type NewUser = {
-  password: string;
-  role: string;
-  id: string;
-};
+//partial or optional use kore disi oikhane
+// export type NewUser = {
+//   password: string;
+//   role: string;
+//   id: string;
+// };

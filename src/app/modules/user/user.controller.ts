@@ -1,7 +1,11 @@
 import { UserServices } from './user.service';
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     ///schema validation using joi
 
@@ -38,9 +42,10 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err,
-    });
+    next(err);
   }
+};
+
+export const UserControllers = {
+  createStudent,
 };

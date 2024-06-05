@@ -6,9 +6,6 @@ import {
   Student,
   UserName,
 } from './student.interface';
-import bcrypt from 'bcrypt';
-import config from '../../config';
-import { boolean, func, string } from 'joi';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -48,11 +45,13 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 
 const studentSchema = new Schema<Student>({
   id: { type: String, required: true, unique: true },
-  password: {
-    type: String,
-    required: [true, 'password lagbei'],
-    maxlength: 20,
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'user id is required'],
+    unique: true,
+    ref: 'User',
   },
+
   name: userNameSchema,
 
   gender: {
@@ -91,7 +90,6 @@ const studentSchema = new Schema<Student>({
   guardian: guardianSchema,
   localGuardian: localGuardianSchema,
   profileImage: { type: String, required: true },
-  isActive: ['active', 'blocked'],
   isdeleted: {
     type: Boolean,
     default: false,
@@ -99,22 +97,6 @@ const studentSchema = new Schema<Student>({
 });
 
 // pre saved middleware (document middlewares)
-
-studentSchema.pre('save', async function (next) {
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-  console.log(this, 'pre hook: we will save the data');
-});
-
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  console.log(this, 'post hook: we  saved our` data');
-  next();
-});
 
 //query middleware
 studentSchema.pre('find', function (next) {
