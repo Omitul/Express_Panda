@@ -1,32 +1,26 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentServies } from './student.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
+import { nextTick } from 'process';
 //import studentValidationSchemaJoi from './student.validationJoi';
-
-const getAllStudents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const result = await StudentServies.getAllStudentsFromDb();
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'students retrieved successfully',
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
+const catchAsync = (fn: RequestHandler) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch((err) => next(err));
+  };
 };
 
-const getSingleStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const getAllStudents = catchAsync(async (req, res, next) => {
+  const result = await StudentServies.getAllStudentsFromDb();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'students retrieved successfully',
+    data: result,
+  });
+});
+
+const getSingleStudent: RequestHandler = async (req, res, next) => {
   try {
     const { studentId } = req.params;
 
@@ -43,11 +37,7 @@ const getSingleStudent = async (
   }
 };
 
-const deleteStudentFromDb = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const deleteStudentFromDb: RequestHandler = async (req, res, next) => {
   try {
     const { studentId } = req.params;
     const result = await StudentServies.deleteStudentFromDb(studentId);
@@ -63,11 +53,7 @@ const deleteStudentFromDb = async (
   }
 };
 
-const deleteStudentFromDbH = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const deleteStudentFromDbH: RequestHandler = async (req, res, next) => {
   try {
     const { studentId } = req.params;
     const result = await StudentServies.deleteStudentFromDbHe(studentId);
