@@ -2,13 +2,10 @@ import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 import { Response, Request, NextFunction } from 'express';
+import catchAsync from '../../utils/catchAsync';
 
-const createStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const createStudent = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     ///schema validation using joi
 
     /// using zod validation
@@ -49,11 +46,8 @@ const createStudent = async (
       message: 'student created successfully',
       data: result,
     });
-  } catch (err) {
-    next(err);
-  }
-};
-
+  },
+);
 export const UserControllers = {
   createStudent,
 };

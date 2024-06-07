@@ -44,7 +44,6 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
-  id: { type: String, required: true, unique: true },
   user: {
     type: Schema.Types.ObjectId,
     required: [true, 'user id is required'],
@@ -90,10 +89,6 @@ const studentSchema = new Schema<Student>({
   guardian: guardianSchema,
   localGuardian: localGuardianSchema,
   profileImage: { type: String, required: true },
-  isdeleted: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 // pre saved middleware (document middlewares)
