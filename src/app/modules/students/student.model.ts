@@ -44,11 +44,16 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
+  id: {
+    type: String,
+    required: [true, 'student id is required'],
+    unique: true,
+  },
   user: {
     type: Schema.Types.ObjectId,
     required: [true, 'user id is required'],
     unique: true,
-    ref: 'User',
+    ref: 'user',
   },
 
   name: userNameSchema,
@@ -64,7 +69,7 @@ const studentSchema = new Schema<Student>({
     required: true,
   },
   dateOfBirth: {
-    type: String,
+    type: Date,
   },
   email: {
     type: String,
@@ -89,6 +94,14 @@ const studentSchema = new Schema<Student>({
   guardian: guardianSchema,
   localGuardian: localGuardianSchema,
   profileImage: { type: String, required: true },
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicSemester',
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre saved middleware (document middlewares)

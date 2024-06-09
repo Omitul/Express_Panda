@@ -23,10 +23,11 @@ export type LocalGuardian = {
 };
 
 export type Student = {
+  id: string;
   user: Types.ObjectId;
   name: UserName;
   gender: 'male' | 'female' | 'other';
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -36,4 +37,6 @@ export type Student = {
   guardian: Guardian;
   localGuardian: LocalGuardian;
   profileImage?: string;
+  admissionSemester: Types.ObjectId;
+  isDeleted: boolean;
 };
