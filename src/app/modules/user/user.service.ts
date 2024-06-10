@@ -11,7 +11,7 @@ import httpStatus from 'http-status';
 
 const createStudentIntoDB = async (password: string, payload: Student) => {
   //  const result = await StudentModel.create(student);
-
+  console.log('ekhane');
   // creating user object
   const userData: Partial<Tuser> = {};
 
@@ -63,9 +63,11 @@ const createStudentIntoDB = async (password: string, payload: Student) => {
     await session.endSession();
     return newStudent;
   } catch (err) {
+    console.log('hocchena');
     await session.abortTransaction();
     await session.endSession();
-    throw err;
+    console.log('hocchena');
+    throw new Error('Failed to create student');
   }
 };
 export const UserServices = {

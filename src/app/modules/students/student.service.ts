@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import AppError from '../../Error/AppError';
 import { User } from '../user/user.model';
 import httpStatus from 'http-status';
+import { Student } from './student.interface';
+import { object } from 'joi';
 
 const getAllStudentsFromDb = async () => {
   const result = await StudentModel.find()
@@ -17,7 +19,7 @@ const getAllStudentsFromDb = async () => {
 };
 
 const getSingleStudentFromDb = async (id: string) => {
-  const result = await StudentModel.findOne({ id })
+  const result = await StudentModel.find({ id })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -26,7 +28,46 @@ const getSingleStudentFromDb = async (id: string) => {
       },
     });
   //const result = await StudentModel.aggregate([{ $match: { id: id } }]);
+  console.log(result);
+  return result;
+};
 
+const updateStudentIntoDb = async (id: string, payload: Partial<Student>) => {
+  const { name, guardian, localGuardian, ...remainingStudentData } = payload;
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value;
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedData[`guardian.${key}`] = value;
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedData[`$localGuardian.${key}`] = value;
+    }
+  }
+
+  console.log(modifiedUpdatedData);
+  const result = await StudentModel.findOneAndUpdate(
+    { id },
+    modifiedUpdatedData,
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  //const result = await StudentModel.aggregate([{ $match: { id: id } }]);
+  console.log(result);
   return result;
 };
 
@@ -64,6 +105,7 @@ const deleteStudentFromDbHe = async (id: string) => {
     await session.abortTransaction();
     await session.endSession();
     console.log(err);
+    throw new Error('Failed to delete Student');
   }
 };
 
@@ -72,4 +114,5 @@ export const StudentServies = {
   getSingleStudentFromDb,
   deleteStudentFromDb,
   deleteStudentFromDbHe,
+  updateStudentIntoDb,
 };

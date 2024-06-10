@@ -9,7 +9,7 @@ const router = express.Router();
 /// will call controller function
 router.post(
   '/create-student',
-  validateRequest(studentValidations.Create_Student_Validation),
+  validateRequest(studentValidations.CreateStudentValidation),
   UserControllers.createStudent,
 );
 
