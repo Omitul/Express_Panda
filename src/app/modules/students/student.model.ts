@@ -96,7 +96,11 @@ const studentSchema = new Schema<Student>({
   profileImage: { type: String, required: true },
   admissionSemester: {
     type: Schema.Types.ObjectId,
-    ref: 'AcademicSemester',
+    ref: 'AcademicSemester', /// ekhane mainly tmr model bananur somoi deya database er naam dite hbe jate linked kora jaai
+  },
+  academicDepartment: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicDepartment',
   },
   isDeleted: {
     type: Boolean,

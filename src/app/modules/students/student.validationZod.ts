@@ -41,6 +41,7 @@ const Create_Student_Validation = z.object({
       localGuardian: localGuardianValidationZodSchema,
       profileImage: z.string(),
       admissionSemester: z.string(),
+      academicDepartment: z.string(),
       isDeleted: z.boolean(),
     }),
   }),
