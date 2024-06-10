@@ -13,10 +13,10 @@ router.post(
   AcademicFacultyControllers.createAcademicFaculty,
 );
 
-router.get(':/facultyId', AcademicFacultyControllers.getSingleAcademicFaculty);
+router.get('/:facultyId', AcademicFacultyControllers.getSingleAcademicFaculty);
 
 router.patch(
-  ':/facultyId',
+  '/:facultyId',
   validateRequest(
     AcademicFacultyValidation.UpdateAcademicFacultyValidationSchema,
   ),

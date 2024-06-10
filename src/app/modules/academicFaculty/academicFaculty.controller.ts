@@ -52,9 +52,12 @@ const createAcademicFaculty = catchAsync(
 );
 
 const getSingleAcademicFaculty = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { facultyId } = req.params;
+  console.log(req.params);
   const result =
-    await AcademicFacultyServices.getSingleAcademicFacultyFromDB(semesterId);
+    await AcademicFacultyServices.getSingleAcademicFacultyFromDB(facultyId);
+
+  console.log(result);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -66,9 +69,9 @@ const getSingleAcademicFaculty = catchAsync(async (req, res) => {
 
 const updateAcademicFaculty = catchAsync(
   async (req: Request, res: Response) => {
-    const { semesterId } = req.params;
+    const { facultyId } = req.params;
     const result = await AcademicFacultyServices.updateAcademicFacultyIntoDB(
-      semesterId,
+      facultyId,
       req.body,
     );
 
