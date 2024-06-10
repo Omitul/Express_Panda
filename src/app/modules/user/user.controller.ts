@@ -40,6 +40,7 @@ const createStudent = catchAsync(
     //   message: 'student is created successfully',
     //   data: result,
     // });
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
