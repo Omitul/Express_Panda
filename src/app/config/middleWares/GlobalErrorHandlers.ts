@@ -5,6 +5,8 @@ import { isNumeric } from 'validator';
 import config from '..';
 import handleZodError from '../../Error/handleZodError';
 import handleValidationError from '../../Error/handleValidationError';
+import handleCastError from '../../Error/handleCastError';
+import handleDuplicateError from '../../Error/handleDuplicateError';
 
 const GlobalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
@@ -22,13 +24,22 @@ const GlobalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if (err?.name == 'ValidationError') {
+  } else if (err?.name === 'ValidationError') {
     const simplifiedError = handleValidationError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
+  } else if (err?.name === 'CastError') {
+    const simplifiedError = handleCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.code === 11000) {
+    const simplifiedError = handleDuplicateError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
   }
-
   return res.status(statusCode).json({
     succees: false,
     message,
