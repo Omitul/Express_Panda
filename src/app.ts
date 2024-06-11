@@ -17,6 +17,14 @@ app.use('/api/v1', router);
 
 app.use(GlobalErrorHandler);
 
+//test route
+
+const test = async (req: Request, res: Response) => {
+  //Promise.reject();
+};
+
+app.get('/', test);
+
 // not found route
 app.use(notFound);
 
